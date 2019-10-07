@@ -12,11 +12,17 @@ class Gate < ApplicationRecord
     return false if ticket.entered_gate == self
 
     # 必要な料金とチケットの料金を比較する
-    return (get_fare(ticket) <= ticket.fare)
+    get_fare(ticket) <= ticket.fare
   end
 
+  private
+
+  # チケット料金はstation_numberの差分−1
   def get_fare(ticket)
-    return FARES[(self.station_number - ticket.entered_gate.station_number).abs() -1]
+    from = ticket.entered_gate.station_number
+    to = station_number
+    distance = (to - from).abs
+    return FARES[distance -1]
   end
 
 end
